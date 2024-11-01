@@ -1,0 +1,25 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: My workflow
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+jobs:
+  say-hello:
+    steps:
+      - name: Say Hello
+        uses: docker://golang:1.20.3-alpine3.17
+        shell: sh
+        run: |
+          echo "hello world"
+  trigger-jenkins-job:   
+    timeout-minutes: 175  
+    steps:
+      - id: jenkins-via-plugin1
+        name: Trigger Jenkins Job
+        uses: cloudbees-io/jenkins-run-job@v2
+        with:
+          integration-name: "jenkins-preprod-8081"
+          job-name: "my-new-job"
